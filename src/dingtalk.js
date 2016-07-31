@@ -5,6 +5,7 @@ import Token from './token';
 import Ticket from './ticket';
 import User from './user';
 import Department from './department';
+import Chat from './chat';
 import Service from './service';
 class DingTalk {
 

@@ -13,7 +13,15 @@ gulp.task('babel', function () {
         .pipe(gulp.dest('lib'))
 });
 
-gulp.task('test', function () {
+gulp.task('buildTest', function () {
+    return gulp.src('test/src/**.js')
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.concat('test.js'))
+        .pipe(plugins.sourcemaps.write())
+        .pipe(gulp.dest('test'))
+});
+
+gulp.task('test', ['buildTest'], function () {
     gulp.src('test/**.js')
         .pipe(plugins.mocha());
 });
@@ -24,3 +32,6 @@ var onChanged = function (event) {
 
 var babelWatcher = gulp.watch('src/**/*.js', ['babel']);
 babelWatcher.on('change', onChanged);
+
+var testWatcher = gulp.watch('test/src/**.js', ['buildTest']);
+testWatcher.on('change', onChanged);
