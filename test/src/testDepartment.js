@@ -40,4 +40,19 @@ describe('部门接口', function () {
         return data.errcode.should.equal(0);
       });
   });
+
+  it('获取部门ID', function () {
+    return dept.getId({name: '青年创客西安小组'})
+      .then((data)=> {
+        return data.errcode.should.equal(0);
+      });
+  });
+
+  it.only('获取子部门列表', function () {
+    return dept.getId({name: '青年创客西安小组'})
+      .then(dept.getBranches.bind(dept))
+      .then((data)=> {
+        return data.errcode.should.equal(0);
+      });
+  });
 });

@@ -76,11 +76,28 @@ class Base {
       .then(this.parse.bind(this));
   }
 
+  send(options) {
+    return request
+      .post(this.getUrl('send'))
+      .query(this.getQuery())
+      .send(options)
+      .then(this.parse.bind(this))
+  }
 
   parse(data) {
     data = data.body;
     if (data.errcode != 0) {
       throw new Error(data.errmsg);
+    }
+    return data;
+  }
+
+  assemble(data, errmsg = null) {
+    if (!errmsg) {
+      Object.assign(data, {errcode: 0}, {errmsg: 'ok'});
+    }
+    else {
+      Object.assign({errcode: -1}, {errmsg});
     }
     return data;
   }

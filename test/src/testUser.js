@@ -1,7 +1,7 @@
 /**
  * Created by michao on 16/7/30.
  */
-describe('用户接口', function () {
+describe.skip('用户接口', function () {
   var id;
   var userlist;
   var userid;

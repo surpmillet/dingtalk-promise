@@ -1,7 +1,7 @@
 /**
  * Created by michao on 16/7/31.
  */
-describe.only('聊天接口', function () {
+describe('聊天接口', function () {
   var userlist;
   var chatid = process.env.chatId;
   before('配置测试', function () {
@@ -28,10 +28,18 @@ describe.only('聊天接口', function () {
       });
   });
   it('修改会话', function () {
-    // this.skip();
+    this.skip();
     return chat.update({chatid, name: '新测试群'})
       .then((data)=> {
         return data.errcode.should.equal(0);
       });
   });
+
+  // it('发送文本消息', function () {
+  //   // this.skip();
+  //   return chat.update({chatid, name: '新测试群'})
+  //     .then((data)=> {
+  //       return data.errcode.should.equal(0);
+  //     });
+  // });
 });
