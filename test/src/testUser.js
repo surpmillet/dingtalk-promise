@@ -1,11 +1,11 @@
 /**
  * Created by michao on 16/7/30.
  */
-describe('用户接口', function () {
+describe.only('用户接口', function () {
     var id;
     var userlist;
-    var detail;
     var userid;
+    var name;
     before('获取部门ID', function () {
         return dept.getList()
             .then((data)=> {
@@ -30,7 +30,6 @@ describe('用户接口', function () {
     it('获取成员详情', function () {
         return user.getDetail({userid: userlist[0].userid})
             .then((data)=> {
-                detail = data;
                 return data.errcode.should.equal(0);
             });
     });
@@ -44,13 +43,17 @@ describe('用户接口', function () {
         return user.create(options)
             .then((data)=> {
                 userid = data.userid;
+                return {userid};
+            })
+            .then(user.getDetail.bind(user))
+            .then((data)=> {
+                name = data.name;
                 return data.errcode.should.equal(0);
-            });
+            })
     });
 
     it('更新成员', function () {
-        detail.position = '测试';
-        return user.update(detail)
+        return user.update({userid, name, position: '测试'})
             .then((data)=> {
                 return data.errcode.should.equal(0);
             });

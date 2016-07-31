@@ -4,7 +4,6 @@
 describe('部门接口', function () {
     var id;
     var list;
-    var detail;
     it('获取部门列表 getLit', function () {
         return dept.getList()
             .then((data)=> {
@@ -16,7 +15,6 @@ describe('部门接口', function () {
     it('获取部门详情 getDetail', function () {
         return dept.getDetail({id: list[1].id})
             .then((data)=> {
-                detail = data;
                 return data.errcode.should.equal(0);
             });
     });
@@ -30,8 +28,7 @@ describe('部门接口', function () {
     });
 
     it('更新部门 update', function () {
-        detail.name = '新' + detail.name;
-        return dept.update(detail)
+        return dept.update({id: id, name: '新测试'})
             .then((data)=> {
                 return data.errcode.should.equal(0);
             });
