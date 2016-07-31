@@ -48,7 +48,7 @@ describe('部门接口', function () {
       });
   });
 
-  it.only('获取子部门列表', function () {
+  it('获取子部门列表', function () {
     return dept.getId({name: '青年创客西安小组'})
       .then(dept.getBranches.bind(dept))
       .then((data)=> {

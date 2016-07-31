@@ -81,7 +81,15 @@ class Base {
       .post(this.getUrl('send'))
       .query(this.getQuery())
       .send(options)
-      .then(this.parse.bind(this))
+      .then(this.parse.bind(this));
+  }
+
+  upload(options) {
+    return request
+      .post(this.getUrl('upload'))
+      .query(this.getQuery())
+      .send(options)
+      .then(this.parse.bind(this));
   }
 
   parse(data) {

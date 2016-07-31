@@ -16,6 +16,7 @@ class DingTalk {
     this.user = new User({service: this, name: 'user'});
     this.department = new Department({service: this, name: 'department'});
     this.chat = new Chat({service: this, name: 'chat'});
+    this.media = new Chat({service: this, name: 'media'});
     this.Service = Service;
   }
 
