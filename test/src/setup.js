@@ -13,13 +13,13 @@ var dept;
 var user;
 var chat;
 before(function () {
-    dt = new Dingtalk(corpId, corpSecret);
-    return dt.run().then((data)=> {
-        dt.watch();
-        token = dt.token;
-        ticket = dt.ticket;
-        dept = dt.department;
-        user = dt.user;
-        chat = dt.chat;
-    });
+  dt = new Dingtalk(corpId, corpSecret);
+  return dt.run().then((data)=> {
+    dt.watch();
+    token = dt.token;
+    ticket = dt.ticket;
+    dept = dt.department;
+    user = dt.user;
+    chat = dt.chat;
+  });
 });

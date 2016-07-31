@@ -76,6 +76,7 @@ class Base {
       .then(this.parse.bind(this));
   }
 
+
   parse(data) {
     data = data.body;
     if (data.errcode != 0) {
