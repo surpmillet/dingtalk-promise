@@ -4,7 +4,7 @@
   "description": "promise api for dingtalk.com",
   "main": "lib/dingtalk.js",
   "scripts": {
-    "test": "source .bin/env && gulp test"
+    "test": "source .bin/setenv.sh && gulp test"
   },
   "dependencies": {
     "babel-polyfill": "^6.9.1",

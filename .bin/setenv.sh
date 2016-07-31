@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+export corpId=dingfdef5e37a0c6565f
+export corpSecret=3Ex0Giyn53eddfIf2fIo3Q1zAuURKGysRxDXJulajfXhhyLS6MBz2JlNNE7QD0tT

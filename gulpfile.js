@@ -5,7 +5,7 @@ var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 
 gulp.task('babel', function () {
-    gulp.src('src/**/*.js')
+    return gulp.src('src/**/*.js')
         .pipe(plugins.changed('lib'))
         .pipe(plugins.sourcemaps.init())
         .pipe(plugins.babel({presets: ['es2015', 'stage-0']}))
