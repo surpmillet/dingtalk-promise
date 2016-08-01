@@ -1,11 +1,12 @@
 /**
  * Created by michao on 16/7/31.
  */
+var fs = require('fs');
 describe('多媒体接口', function () {
   var media_id;
-  it.only('上传媒体', function () {
+  it('上传媒体', function () {
     var filepath = '/Users/michao/Downloads/1.jpg';
-    return media.getMediaData(filepath)
+    return media.fromMedia(filepath)
       .then(media.buildFormData.bind(media))
       .then(media.upload.bind(media))
       .then((data)=> {
@@ -14,12 +15,12 @@ describe('多媒体接口', function () {
       });
   });
 
-  it('下载媒体', function () {
-    var media_id = process.env.mediaid;
-    return media.download({media_id})
+  it.only('下载媒体', function () {
+    var media_id = '@lADOY5VLTc0CZc0Cig';
+    return media.download({media_id}, '/Users/michao/Downloads/')
+      .then(media.toMedia.bind(media))
       .then((data)=> {
-        var content = Buffer.toString(data);
-        return data.errcode.should.equal(0);
-      });
+        data.errcode.should.equal(0);
+      })
   });
 });

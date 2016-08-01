@@ -89,23 +89,31 @@ class Base {
       .post(this.getUrl('upload'))
       .type('form')
       .set('Content-Type', options.contentType)
+      .set('Content-Disposition', options.disposition)
       .query(this.getQuery(options.query))
       .send(options.buffer)
       .then(this.parse.bind(this));
   }
 
-  download(query) {
+  download(query, path) {
     return request
       .get(this.getUrl('get'))
-      .query(this.getQuery(query));
+      .query(this.getQuery(query))
+      .then(this.parse.bind(this))
+      .then((data)=> {
+        return {data, path};
+      });
   }
 
   parse(data) {
-    data = data.body;
-    if (data.errcode != 0) {
-      throw new Error(data.errmsg);
+    var result = data.body;
+    if (result.errcode == undefined) {
+      return data;
     }
-    return data;
+    if (result.errcode) {
+      throw new Error(result.errmsg);
+    }
+    return result;
   }
 
   assemble(data, errmsg = null) {
