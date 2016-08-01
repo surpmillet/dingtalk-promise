@@ -5,6 +5,7 @@ import Base from './base';
 import fs from 'fs';
 import path from 'path';
 import Service from './service';
+import _ from 'lodash';
 class Media extends Base {
   getMediaData(filepath) {
     return new Promise((resolve, reject)=> {
@@ -32,7 +33,7 @@ class Media extends Base {
     var endBuffer = new Buffer(`\r\n--${boundary}--\r\n`, 'utf8');
     var buffer = Buffer.concat([headerBuffer, data, endBuffer]);
     return {
-      query: {type: mime.has(path.extname(filepath)) ? mime[path.extname(filepath)] : 'file', 'media': header},
+      query: {type: _.has(mime, path.extname(filepath)) ? mime[path.extname(filepath)] : 'file', 'media': header},
       contentType,
       buffer
     };

@@ -3,7 +3,7 @@
  */
 describe('多媒体接口', function () {
   var media_id;
-  it('上传媒体', function () {
+  it.only('上传媒体', function () {
     var filepath = '/Users/michao/Downloads/1.jpg';
     return media.getMediaData(filepath)
       .then(media.buildFormData.bind(media))
@@ -14,7 +14,7 @@ describe('多媒体接口', function () {
       });
   });
 
-  it.only('下载媒体', function () {
+  it('下载媒体', function () {
     var media_id = process.env.mediaid;
     return media.download({media_id})
       .then((data)=> {
