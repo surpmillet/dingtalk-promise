@@ -18,7 +18,18 @@ class Media extends Base {
   }
 
   buildFormData(options) {
-    var mime = {'.jpg': 'image', '.png': 'image'};
+    var mime = {
+      '.jpg': 'image',
+      '.png': 'image',
+      '.doc': 'file',
+      '.docx': 'file',
+      '.xls': 'file',
+      '.xlsx': 'file',
+      '.ppt': 'file',
+      '.pptx': 'file',
+      '.txt': 'file',
+      '.amr': 'voice'
+    };
     var filepath = options.filepath;
     var data = options.data;
     var boundary = Service.getNonceSecurityString();
