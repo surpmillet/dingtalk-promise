@@ -3,5 +3,6 @@
  */
 import Base from './base';
 class Media extends Base {
+  
 }
 export default Media;

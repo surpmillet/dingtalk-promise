@@ -12,6 +12,7 @@ var ticket;
 var dept;
 var user;
 var chat;
+var media;
 before(function () {
   dt = new Dingtalk(corpId, corpSecret);
   return dt.run().then((data)=> {
@@ -21,5 +22,6 @@ before(function () {
     dept = dt.department;
     user = dt.user;
     chat = dt.chat;
+    media = dt.media;
   });
 });

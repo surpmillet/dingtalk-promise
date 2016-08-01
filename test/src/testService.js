@@ -3,6 +3,12 @@
  */
 describe('服务接口', function () {
   it('获取随机串 getNonceString', function () {
-    return Service.getNonceString().should.not.be.empty;
+    var str = Service.getNonceString();
+    return str.should.not.be.empty;
+  });
+
+  it('获取随机字符串 getNonceSecurityString', function () {
+    var str = Service.getNonceSecurityString();
+    return str.should.not.be.empty;
   });
 });
