@@ -1,11 +1,11 @@
 /**
  * Created by michao on 16/7/31.
  */
-var fs = require('fs');
 describe('多媒体接口', function () {
+  var path = require('path');
   var media_id;
   it('上传媒体', function () {
-    var filepath = '/Users/michao/Downloads/1.jpg';
+    var filepath = process.env.filepath;
     return media.fromMedia(filepath)
       .then(media.buildFormData.bind(media))
       .then(media.upload.bind(media))
@@ -16,8 +16,9 @@ describe('多媒体接口', function () {
   });
 
   it.only('下载媒体', function () {
-    var media_id = '@lADOY5VLTc0CZc0Cig';
-    return media.download({media_id}, '/Users/michao/Downloads/')
+    var media_id = process.env.mediaid;
+    var dir = path.dirname(process.env.filepath);
+    return media.download({media_id}, dir)
       .then(media.toMedia.bind(media))
       .then((data)=> {
         data.errcode.should.equal(0);
