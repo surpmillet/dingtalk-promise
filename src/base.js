@@ -94,6 +94,12 @@ class Base {
       .then(this.parse.bind(this));
   }
 
+  download(query) {
+    return request
+      .get(this.getUrl('get'))
+      .query(this.getQuery(query));
+  }
+
   parse(data) {
     data = data.body;
     if (data.errcode != 0) {
