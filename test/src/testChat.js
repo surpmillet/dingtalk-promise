@@ -1,7 +1,7 @@
 /**
  * Created by michao on 16/7/31.
  */
-describe.only('聊天接口', function () {
+describe('聊天接口', function () {
   var userlist;
   var chatid = process.env.chatId;
   before('配置测试', function () {

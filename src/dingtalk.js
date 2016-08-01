@@ -6,6 +6,7 @@ import Ticket from './ticket';
 import User from './user';
 import Department from './department';
 import Chat from './chat';
+import Media from './media';
 import Service from './service';
 class DingTalk {
 
@@ -16,7 +17,7 @@ class DingTalk {
     this.user = new User({service: this, name: 'user'});
     this.department = new Department({service: this, name: 'department'});
     this.chat = new Chat({service: this, name: 'chat'});
-    this.media = new Chat({service: this, name: 'media'});
+    this.media = new Media({service: this, name: 'media'});
     this.Service = Service;
   }
 

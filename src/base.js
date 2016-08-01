@@ -87,9 +87,10 @@ class Base {
   upload(options) {
     return request
       .post(this.getUrl('upload'))
-      .set('Content-Type', 'image/jpg')
-      .query(this.getQuery({type: options.type}))
-      .attach(options.name, options.path)
+      .type('form')
+      .set('Content-Type', options.contentType)
+      .query(this.getQuery(options.query))
+      .send(options.buffer)
       .then(this.parse.bind(this));
   }
 
