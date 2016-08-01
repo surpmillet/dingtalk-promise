@@ -21,13 +21,6 @@ class Media extends Base {
     var mime = {
       '.jpg': 'image',
       '.png': 'image',
-      '.doc': 'file',
-      '.docx': 'file',
-      '.xls': 'file',
-      '.xlsx': 'file',
-      '.ppt': 'file',
-      '.pptx': 'file',
-      '.txt': 'file',
       '.amr': 'voice'
     };
     var filepath = options.filepath;
@@ -38,7 +31,11 @@ class Media extends Base {
     var headerBuffer = new Buffer(header, 'utf8');
     var endBuffer = new Buffer(`\r\n--${boundary}--\r\n`, 'utf8');
     var buffer = Buffer.concat([headerBuffer, data, endBuffer]);
-    return {query: {type: mime[path.extname(filepath)], 'media': header}, contentType, buffer};
+    return {
+      query: {type: mime.has(path.extname(filepath)) ? mime[path.extname(filepath)] : 'file', 'media': header},
+      contentType,
+      buffer
+    };
   }
 }
 export default Media;
