@@ -23,7 +23,7 @@ class Base {
   }
 
   getQuery(query = {}) {
-    Object.assign(query, {'access_token': this.service.getAccessToken()});
+    _(query).assign({'access_token': this.service.getAccessToken()}).value();
     return query;
   }
 
@@ -103,12 +103,11 @@ class Base {
 
   assemble(data, errmsg = null) {
     if (!errmsg) {
-      Object.assign(data, {errcode: 0}, {errmsg: 'ok'});
+      return _(data).assign({errcode: 0}, {errmsg: 'ok'}).value();
     }
     else {
-      Object.assign({errcode: -1}, {errmsg});
+      return {errcode: -1, errmsg};
     }
-    return data;
   }
 
   fromMedia(options) {
@@ -139,7 +138,7 @@ class Base {
     var buffer = Buffer.concat([headerBuffer, fileBuffer, endBuffer]);
     return _(options).assign({
       query: {type: _.has(mime, path.extname(filepath)) ? mime[path.extname(filepath)] : 'file', 'media': header},
-      header: Object.assign({'Content-Type': contentType}, partition),
+      header: _(partition).assign({'Content-Type': contentType}).value(),
       buffer
     }).value();
   }
