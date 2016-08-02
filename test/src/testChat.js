@@ -1,12 +1,12 @@
 /**
  * Created by michao on 16/7/31.
  */
-describe.skip('聊天接口', function () {
+describe('聊天接口', function () {
   var dept = dt.createDepartment();
   var user = dt.createUser();
   var chat = dt.createChat();
   var userlist;
-  var chatid = process.env.chatId;
+  var chatid;
   before('配置测试', function () {
     return dept.getList()
       .then((data)=> {
@@ -18,7 +18,7 @@ describe.skip('聊天接口', function () {
       });
   });
   it('创建会话', function () {
-    this.skip();
+    // this.skip();
     var options = {
       "name": "测试群",
       "owner": userlist[0].userid,
@@ -27,11 +27,12 @@ describe.skip('聊天接口', function () {
     return chat.create(options)
       .then((data)=> {
         chatid = data.chatid;
+        console.log(chatid);
         return data.errcode.should.equal(0);
       });
   });
   it('修改会话', function () {
-    this.skip();
+    // this.skip();
     return chat.update({chatid, name: '新测试群'})
       .then((data)=> {
         return data.errcode.should.equal(0);
@@ -39,6 +40,7 @@ describe.skip('聊天接口', function () {
   });
 
   it('发送文本消息', function () {
+    chatid = process.env.chatId;
     var options = {
       "chatid": chatid,
       "sender": userlist[0].userid,
@@ -54,6 +56,7 @@ describe.skip('聊天接口', function () {
   });
 
   it('发送链接消息', function () {
+    chatid = process.env.chatId;
     var options = {
       "chatid": chatid,
       "sender": userlist[0].userid,
@@ -72,6 +75,7 @@ describe.skip('聊天接口', function () {
   });
 
   it('发送OA消息', function () {
+    chatid = process.env.chatId;
     var options = {
       "chatid": chatid,
       "sender": userlist[0].userid,

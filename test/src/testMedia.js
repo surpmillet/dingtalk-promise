@@ -1,7 +1,7 @@
 /**
  * Created by michao on 16/7/31.
  */
-describe.skip('多媒体接口', function () {
+describe('多媒体接口', function () {
   var media = dt.createMedia();
   var path = require('path');
   var media_id;
