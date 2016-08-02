@@ -1,7 +1,7 @@
 /**
  * Created by michao on 16/8/2.
  */
-describe.skip('钉盘接口', function () {
+describe('钉盘接口', function () {
   var file = dt.createFile();
   var uploadid;
   before('配置测试', function () {

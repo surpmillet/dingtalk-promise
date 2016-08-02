@@ -7,17 +7,34 @@ import path from 'path';
 class Media extends Base {
 
   toMedia(options) {
-    var filepath = path.join(options.path, path.basename(options.data.redirects[0]));
-    return ((_this)=> {
-      return new Promise((resolve, reject)=> {
-        fs.writeFile(filepath, options.data.body, (err)=> {
-          if (err) {
-            return reject(err);
-          }
-          return resolve(_this.assemble({filepath}));
-        });
+    let {dir, data}=options;
+    var filepath = path.join(dir, path.basename(data.redirects[0]));
+    return new Promise((resolve, reject)=> {
+      fs.writeFile(filepath, data.body, (err)=> {
+        if (err) {
+          return reject(err);
+        }
+        return resolve({filepath});
       });
-    })(this);
+    });
+  }
+
+  upload(filepath) {
+    return this.fromMedia(filepath)
+      .then((data)=> {
+        return {data, filepath};
+      })
+      .then(this.buildFormData.bind(this))
+      .then(super.upload.bind(this));
+  }
+
+  download(media_id, dir) {
+    return super.download({media_id})
+      .then((data)=> {
+        return {dir, data};
+      })
+      .then(this.toMedia.bind(this))
+      .then(this.assemble.bind(this));
   }
 }
 export default Media;

@@ -73,23 +73,21 @@ class Base {
   }
 
   upload(options) {
+    let {header, query, buffer} = options;
     return request
       .post(this.getUrl('upload'))
       .type('form')
-      .set(options.header)
-      .query(this.getQuery(options.query))
-      .send(options.buffer)
+      .set(header)
+      .query(this.getQuery(query))
+      .send(buffer)
       .then(this.parse.bind(this));
   }
 
-  download(query, path) {
+  download(query) {
     return request
       .get(this.getUrl('get'))
       .query(this.getQuery(query))
-      .then(this.parse.bind(this))
-      .then((data)=> {
-        return {data, path};
-      });
+      .then(this.parse.bind(this));
   }
 
   parse(data) {
@@ -134,7 +132,6 @@ class Base {
     var boundary = Service.getNonceSecurityString();
     var contentType = `multipart/form-data; boundary=${boundary}`;
     var contentDisposition = `form-data;name=\"media\";filename=\"${path.basename(filepath)}\"`;
-    // var header = `--${boundary}\r\nContent-Disposition:${contentDisposition}\r\nContent-Type:application/octet-stream\r\n\r\n`;
     var header = `--${boundary}\r\nContent-Disposition:${contentDisposition}\r\nContent-Type:multipart/form-data;boundary=----${boundary}\r\n\r\n`;
     var headerBuffer = new Buffer(header, 'utf8');
     var endBuffer = new Buffer(`\r\n--${boundary}--\r\n`, 'utf8');
