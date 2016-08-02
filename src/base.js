@@ -111,19 +111,20 @@ class Base {
     return data;
   }
 
-  fromMedia(filepath) {
+  fromMedia(options) {
+    let {filepath} = options;
     return new Promise((resolve, reject)=> {
-      fs.readFile(filepath, function (err, data) {
+      fs.readFile(filepath, function (err, fileBuffer) {
         if (err) {
           return reject(err);
         }
-        return resolve({data});
+        return resolve(_(options).assign({fileBuffer}).value());
       });
     });
   }
 
   buildFormData(options) {
-    let {data, filepath, partition = {}} = options;
+    let {fileBuffer, filepath, partition = {}} = options;
     var mime = {
       '.jpg': 'image',
       '.png': 'image',
@@ -135,12 +136,12 @@ class Base {
     var header = `--${boundary}\r\nContent-Disposition:${contentDisposition}\r\nContent-Type:multipart/form-data;boundary=----${boundary}\r\n\r\n`;
     var headerBuffer = new Buffer(header, 'utf8');
     var endBuffer = new Buffer(`\r\n--${boundary}--\r\n`, 'utf8');
-    var buffer = Buffer.concat([headerBuffer, data, endBuffer]);
-    return {
+    var buffer = Buffer.concat([headerBuffer, fileBuffer, endBuffer]);
+    return _(options).assign({
       query: {type: _.has(mime, path.extname(filepath)) ? mime[path.extname(filepath)] : 'file', 'media': header},
       header: Object.assign({'Content-Type': contentType}, partition),
       buffer
-    };
+    }).value();
   }
 }
 

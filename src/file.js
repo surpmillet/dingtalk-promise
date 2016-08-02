@@ -38,7 +38,17 @@ class File extends Base {
   }
 
   asyncUpload(filepath) {
+    var fileData;
+    var uploadid;
     return this.fromMedia(filepath)
+      .then((data)=> {
+        fileData = data;
+        return fileData.length;
+      })
+      .then(this.uploadCreate.bind(this))
+      .then((data)=> {
+        uploadid = data.uploadid;
+      })
       .then(this.toBlocks.bind(this))
       .then((data)=> {
         return data.map((item)=> {

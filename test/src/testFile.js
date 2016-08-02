@@ -14,6 +14,6 @@ describe('钉盘接口', function () {
       .then((data)=> {
         uploadid = data.uploadid;
         data.code.should.equal('0');
-      })
+      });
   });
 });
