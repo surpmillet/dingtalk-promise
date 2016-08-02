@@ -2,8 +2,12 @@
  * Created by michao on 16/7/30.
  */
 describe('部门接口', function () {
+  var dept = dt.createDepartment();
   var id;
   var list;
+  before('配置测试', function () {
+    // TODO:Setup
+  });
   it('获取部门列表 getLit', function () {
     return dept.getList()
       .then((data)=> {

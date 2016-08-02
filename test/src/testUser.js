@@ -1,7 +1,9 @@
 /**
  * Created by michao on 16/7/30.
  */
-describe.skip('用户接口', function () {
+describe('用户接口', function () {
+  var dept = dt.createDepartment();
+  var user = dt.createUser();
   var id;
   var userlist;
   var userid;
@@ -43,6 +45,7 @@ describe.skip('用户接口', function () {
     return user.create(options)
       .then((data)=> {
         userid = data.userid;
+        console.log(userid);
         return {userid};
       })
       .then(user.getDetail.bind(user))
@@ -74,6 +77,7 @@ describe.skip('用户接口', function () {
     };
     return user.create(options)
       .then((data)=> {
+        console.log(data.userid);
         return {useridlist: [data.userid]};
       })
       .then(user.removeAll.bind(user))

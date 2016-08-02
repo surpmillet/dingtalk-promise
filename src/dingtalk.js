@@ -7,6 +7,7 @@ import User from './user';
 import Department from './department';
 import Chat from './chat';
 import Media from './media';
+import File from './file';
 import Service from './service';
 class DingTalk {
 
@@ -14,10 +15,6 @@ class DingTalk {
     this.timeout = expireIn;
     this.token = new Token(corpId, corpSecret, expireIn, request);
     this.ticket = new Ticket(null, expireIn, request);
-    this.user = new User({service: this, name: 'user'});
-    this.department = new Department({service: this, name: 'department'});
-    this.chat = new Chat({service: this, name: 'chat'});
-    this.media = new Media({service: this, name: 'media'});
     this.Service = Service;
   }
 
@@ -43,6 +40,26 @@ class DingTalk {
       this.token.getAccessToken()
         .then(this.ticket.getTicket.bind(this.ticket));
     }, this.timeout);
+  }
+
+  createUser() {
+    return new User({service: this, basePath: 'user'});
+  }
+
+  createDepartment() {
+    return new Department({service: this, basePath: 'department'});
+  }
+
+  createChat() {
+    return new Chat({service: this, basePath: 'chat'});
+  }
+
+  createMedia() {
+    return new Media({service: this, basePath: 'media'});
+  }
+
+  createFile() {
+    return new File({service: this, basePath: 'file'});
   }
 }
 
