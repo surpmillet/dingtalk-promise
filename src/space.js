@@ -12,5 +12,12 @@ class Space extends Base {
       .query(this.getQuery({domain: this.domain}))
       .then(this.parse.bind(this));
   }
+
+  sendToChat(query) {
+    return request
+      .post(this.getUrl('add_to_single_chat'))
+      .query(this.getQuery(query))
+      .then(this.parse.bind(this));
+  }
 }
 export default Space;

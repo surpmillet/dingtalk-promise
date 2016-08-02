@@ -9,8 +9,7 @@
   "dependencies": {
     "async": "^2.0.1",
     "babel-polyfill": "^6.9.1",
-    "form-data": "^1.0.0-rc4",
-    "formstream": "^1.0.0",
+    "formidable": "^1.0.17",
     "lodash": "^4.14.1",
     "superagent": "^2.1.0",
     "urlencode": "^1.1.0"

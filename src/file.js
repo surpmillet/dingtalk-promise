@@ -26,6 +26,32 @@ class File extends Base {
       .then(this.parse.bind(this))
   }
 
+  upload(filePath) {
+    return this.getMediaSize(filePath)
+      .then(this.uploadCreate.bind(this))
+      .then((data)=> {
+        return {uploadid: data.uploadid, filePath};
+      })
+      .then(this.fromMedia.bind(this))
+      .then((data)=> {
+        let {filePath, fileBuffer, uploadid} = data;
+        return {
+          uploadid,
+          filePath,
+          fileBuffer: fileBuffer,
+          postHeader: {NDPatition: urlencode(`bytes=0-${fileBuffer.length - 1}`)}
+        };
+      })
+      .then(this.buildFormData.bind(this))
+      .then((data)=> {
+        let {uploadid, buffer} = data;
+        data.query = {uploadid};
+        data.buffer = buffer;
+        return data;
+      })
+      .then(super.upload.bind(this));
+  }
+
   toBlocks(options) {
     let {fileBuffer, size = 512 * 1024} = options;
     var count = Math.ceil(fileBuffer.length / size);
@@ -48,7 +74,7 @@ class File extends Base {
       .then((coll)=> {
         let {uploadid, blocks}=coll;
         let {block, start, end} = blocks[0];
-        var options = {filePath, fileBuffer: block, partition: {NDPartition: urlencode(`bytes=${start}-${end}`)}};
+        var options = {filePath, fileBuffer: block, NDPatition: {NDPartition: urlencode(`bytes=${start}-${end}`)}};
         return Promise.resolve(options)
           .then(this.buildFormData.bind(this))
           .then((data)=> {

@@ -122,7 +122,7 @@ class Base {
   }
 
   buildFormData(options) {
-    let {fileBuffer, filePath, partition = {}} = options;
+    let {fileBuffer, filePath, postHeader = {}} = options;
     var mime = {
       '.jpg': 'image',
       '.png': 'image',
@@ -138,7 +138,7 @@ class Base {
     return _(options).assign({
       type: _.has(mime, path.extname(filePath)) ? mime[path.extname(filePath)] : 'file',
       media: header,
-      header: _(partition).assign({'Content-Type': contentType}).value(),
+      header: _(postHeader).assign({'Content-Type': contentType}).value(),
       buffer
     }).value();
   }

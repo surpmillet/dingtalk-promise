@@ -19,10 +19,10 @@ describe('钉盘接口', function () {
       });
   });
 
-  it('上传文件', function () {
+  it.only('上传文件', function () {
     // this.skip();
     var filepath = process.env.filepath;
-    return file.asyncUpload(filepath)
+    return file.upload(filepath)
       .then((data)=> {
         fileid = data.filepath;
         data.code.should.equal('0');
