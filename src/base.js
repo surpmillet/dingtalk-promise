@@ -124,7 +124,8 @@ class Base {
     });
   }
 
-  buildFormData(data, filepath, ndPartition = {}) {
+  buildFormData(options) {
+    let {data, filepath, ndPartition = {}} = options;
     var mime = {
       '.jpg': 'image',
       '.png': 'image',

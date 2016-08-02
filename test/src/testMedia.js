@@ -11,6 +11,9 @@ describe('多媒体接口', function () {
   it('上传媒体', function () {
     var filepath = process.env.filepath;
     return media.fromMedia(filepath)
+      .then((data)=> {
+        return {data, filepath};
+      })
       .then(media.buildFormData.bind(media))
       .then(media.upload.bind(media))
       .then((data)=> {
