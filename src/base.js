@@ -111,9 +111,9 @@ class Base {
   }
 
   fromMedia(options) {
-    let {filepath} = options;
+    let {filePath} = options;
     return new Promise((resolve, reject)=> {
-      fs.readFile(filepath, function (err, fileBuffer) {
+      fs.readFile(filePath, function (err, fileBuffer) {
         if (err) {
           return reject(err);
         }
@@ -123,7 +123,7 @@ class Base {
   }
 
   buildFormData(options) {
-    let {fileBuffer, filepath, partition = {}} = options;
+    let {fileBuffer, filePath, partition = {}} = options;
     var mime = {
       '.jpg': 'image',
       '.png': 'image',
@@ -131,13 +131,14 @@ class Base {
     };
     var boundary = Service.getNonceSecurityString();
     var contentType = `multipart/form-data; boundary=${boundary}`;
-    var contentDisposition = `form-data;name=\"media\";filename=\"${path.basename(filepath)}\"`;
-    var header = `--${boundary}\r\nContent-Disposition:${contentDisposition}\r\nContent-Type:multipart/form-data;boundary=----${boundary}\r\n\r\n`;
-    var headerBuffer = new Buffer(header, 'utf8');
-    var endBuffer = new Buffer(`\r\n--${boundary}--\r\n`, 'utf8');
+    var contentDisposition = `form-data;name=\"media\";filename=\"${path.basename(filePath)}\"`;
+    var header = `--${boundary}\r\nContent-Disposition:${contentDisposition}\r\nContent-Type:multipart/form-data;boundary=----${Service.getNonceSecurityString()}\r\n\r\n`;
+    var headerBuffer = new Buffer(header);
+    var endBuffer = new Buffer(`\r\n--${boundary}--\r\n`);
     var buffer = Buffer.concat([headerBuffer, fileBuffer, endBuffer]);
     return _(options).assign({
-      query: {type: _.has(mime, path.extname(filepath)) ? mime[path.extname(filepath)] : 'file', 'media': header},
+      type: _.has(mime, path.extname(filePath)) ? mime[path.extname(filePath)] : 'file',
+      media: header,
       header: _(partition).assign({'Content-Type': contentType}).value(),
       buffer
     }).value();

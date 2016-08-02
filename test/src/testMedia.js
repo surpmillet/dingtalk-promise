@@ -1,7 +1,7 @@
 /**
  * Created by michao on 16/7/31.
  */
-describe.only('多媒体接口', function () {
+describe('多媒体接口', function () {
   var media = dt.createMedia();
   var path = require('path');
   var media_id;
@@ -13,12 +13,13 @@ describe.only('多媒体接口', function () {
     return media.upload(filepath)
       .then((data)=> {
         media_id = data.media_id;
+        console.log(media_id);
         return data.errcode.should.equal(0);
       });
   });
 
   it('下载媒体', function () {
-    var media_id = process.env.mediaid;
+    // var media_id = process.env.mediaid;
     var dir = path.dirname(process.env.filepath);
     return media.download(media_id, dir)
       .then((data)=> {

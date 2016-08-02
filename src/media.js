@@ -8,20 +8,25 @@ class Media extends Base {
 
   toMedia(options) {
     let {dir, data}=options;
-    var filepath = path.join(dir, path.basename(data.redirects[0]));
+    var filePath = path.join(dir, path.basename(data.redirects[0]));
     return new Promise((resolve, reject)=> {
-      fs.writeFile(filepath, data.body, (err)=> {
+      fs.writeFile(filePath, data.body, (err)=> {
         if (err) {
           return reject(err);
         }
-        return resolve({filepath});
+        return resolve({filePath});
       });
     });
   }
 
-  upload(filepath) {
-    return this.fromMedia({filepath})
+  upload(filePath) {
+    return this.fromMedia({filePath})
       .then(this.buildFormData.bind(this))
+      .then((data)=> {
+        let {type, media}=data;
+        data.query = {type, media};
+        return data;
+      })
       .then(super.upload.bind(this));
   }
 
