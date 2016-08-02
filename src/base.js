@@ -117,13 +117,13 @@ class Base {
         if (err) {
           return reject(err);
         }
-        return resolve(data);
+        return resolve({data});
       });
     });
   }
 
   buildFormData(options) {
-    let {data, filepath, ndPartition = {}} = options;
+    let {data, filepath, partition = {}} = options;
     var mime = {
       '.jpg': 'image',
       '.png': 'image',
@@ -138,7 +138,7 @@ class Base {
     var buffer = Buffer.concat([headerBuffer, data, endBuffer]);
     return {
       query: {type: _.has(mime, path.extname(filepath)) ? mime[path.extname(filepath)] : 'file', 'media': header},
-      header: Object.assign({'Content-Type': contentType}, ndPartition),
+      header: Object.assign({'Content-Type': contentType}, partition),
       buffer
     };
   }

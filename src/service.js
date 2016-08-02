@@ -18,10 +18,10 @@ class Service {
   }
 
   static getSignature(noncestr, timestamp, jsapi_ticket, url) {
-    var arr = _.map({noncestr, timestamp, jsapi_ticket, url}, (value, key)=> {
+    var arr = _({noncestr, timestamp, jsapi_ticket, url}).map((value, key)=> {
       return {key: key, value: value};
     });
-    var data = _.sortBy(arr, 'key').map((o)=> {
+    var data = _(arr).sortBy('key').map((o)=> {
       return o.key + '=' + o.value;
     }).join('&');
     var hash = crypto.createHash('sha1');

@@ -22,7 +22,8 @@ class Media extends Base {
   upload(filepath) {
     return this.fromMedia(filepath)
       .then((data)=> {
-        return {data, filepath};
+        Object.assign(data, {filepath});
+        return data;
       })
       .then(this.buildFormData.bind(this))
       .then(super.upload.bind(this));
