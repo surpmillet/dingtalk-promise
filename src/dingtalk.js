@@ -8,6 +8,7 @@ import Department from './department';
 import Chat from './chat';
 import Media from './media';
 import File from './file';
+import Space from './space';
 import Service from './service';
 class DingTalk {
 
@@ -60,6 +61,10 @@ class DingTalk {
 
   createFile() {
     return new File({service: this, basePath: 'file'});
+  }
+
+  createSpace() {
+    return new Space({service: this, basePath: 'cspace'});
   }
 }
 

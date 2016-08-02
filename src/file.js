@@ -53,6 +53,7 @@ class File extends Base {
           .then(this.buildFormData.bind(this))
           .then((data)=> {
             data.query = {uploadid};
+            data.buffer = fs.createReadStream(data.buffer);
             return data;
           })
           .then(this.upload.bind(this));

@@ -76,7 +76,6 @@ class Base {
     let {header, query, buffer} = options;
     return request
       .post(this.getUrl('upload'))
-      .type('form')
       .set(header)
       .query(this.getQuery(query))
       .send(buffer)
