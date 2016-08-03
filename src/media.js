@@ -4,9 +4,19 @@
 import Base from './base';
 import fs from 'fs';
 import path from 'path';
+import _ from 'lodash';
 class Media extends Base {
+  mime = {
+    '.jpg': 'image',
+    '.png': 'image',
+    '.amr': 'voice'
+  };
 
-  toMedia(options) {
+  getType(filePath) {
+    return _.has(this.mime, path.extname(filePath)) ? this.mime[path.extname(filePath)] : 'file';
+  }
+
+  write(options) {
     let {dir, data}=options;
     var filePath = path.join(dir, path.basename(data.redirects[0]));
     return new Promise((resolve, reject)=> {
@@ -20,12 +30,10 @@ class Media extends Base {
   }
 
   upload(filePath) {
-    return this.fromMedia({filePath})
+    return this.read({filePath})
       .then(this.buildFormData.bind(this))
       .then((data)=> {
-        let {type, media}=data;
-        data.query = {type, media};
-        return data;
+        return _.assign(data, {query: {type: this.getType(filePath), media: data.contentHeader}});
       })
       .then(super.upload.bind(this));
   }
@@ -35,7 +43,7 @@ class Media extends Base {
       .then((data)=> {
         return {dir, data};
       })
-      .then(this.toMedia.bind(this))
+      .then(this.write.bind(this))
       .then(this.assemble.bind(this));
   }
 }

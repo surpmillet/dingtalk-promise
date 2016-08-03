@@ -4,11 +4,11 @@
 import Base from './base';
 import request from 'superagent';
 import fs from 'fs';
-import _ from 'lodash';
 import async from 'async';
 import urlencode from 'urlencode';
+import _ from 'lodash';
 class File extends Base {
-  getMediaSize(filePath) {
+  getFileSize(filePath) {
     return new Promise((resolve, reject)=> {
       fs.stat(filePath, function (err, stat) {
         if (err) {
@@ -19,7 +19,7 @@ class File extends Base {
     });
   }
 
-  uploadCreate(options) {
+  getUploadId(options) {
     return request
       .get(this.getUrl('upload/create'))
       .query(this.getQuery(options))
@@ -27,79 +27,50 @@ class File extends Base {
   }
 
   upload(filePath) {
-    return this.getMediaSize(filePath)
-      .then(this.uploadCreate.bind(this))
+    return this.getFileSize(filePath)
+      .then(this.getUploadId.bind(this))
       .then((data)=> {
-        return {uploadid: data.uploadid, filePath};
+        return {uploadId: data.uploadid, filePath};
       })
-      .then(this.fromMedia.bind(this))
+      .then(this.read.bind(this))
       .then((data)=> {
-        let {filePath, fileBuffer, uploadid} = data;
-        return {
-          uploadid,
-          filePath,
-          fileBuffer: fileBuffer,
-          postHeader: {NDPatition: urlencode(`bytes=0-${fileBuffer.length - 1}`)}
-        };
-      })
-      .then(this.buildFormData.bind(this))
-      .then((data)=> {
-        let {uploadid, buffer} = data;
-        data.query = {uploadid};
-        data.buffer = buffer;
-        return data;
-      })
-      .then(super.upload.bind(this));
-  }
-
-  toBlocks(options) {
-    let {fileBuffer, size = 512 * 1024} = options;
-    var count = Math.ceil(fileBuffer.length / size);
-    var blocks = _(fileBuffer).chunk(size).map((item, index)=> {
-      var start = index * size;
-      var end = index == count - 1 ? fileBuffer.length - 1 : (index + 1) * size;
-      return {block: new Buffer(item), start, end};
-    }).value();
-    return _(options).assign({blocks}).value();
-  }
-
-  asyncUpload(filePath) {
-    return this.getMediaSize(filePath)
-      .then(this.uploadCreate.bind(this))
-      .then((data)=> {
-        return {uploadid: data.uploadid, filePath};
-      })
-      .then(this.fromMedia.bind(this))
-      .then(this.toBlocks.bind(this))
-      .then((coll)=> {
-        let {uploadid, blocks}=coll;
-        let {block, start, end} = blocks[0];
-        var options = {filePath, fileBuffer: block, NDPatition: {NDPartition: urlencode(`bytes=${start}-${end}`)}};
-        return Promise.resolve(options)
-          .then(this.buildFormData.bind(this))
-          .then((data)=> {
-            data.query = {uploadid};
-            data.buffer = fs.createReadStream(data.buffer);
-            return data;
-          })
-          .then(this.upload.bind(this));
-        // .then((data)=> {
-        //   if (data.code) {
-        //     return cb(new Error(data.msg));
-        //   }
-        //   return cb(null, data.filepath);
-        // });
-        // return new Promise((resolve, reject)=> {
-        //   var options;
-        //   async.reduce(blocks, {}, (memo, item, cb)=> {
-        //
-        //   }, (err, data)=> {
-        //     if (err) {
-        //       return reject(err);
-        //     }
-        //     return resolve(data);
-        //   });
-        // });
+        let {buffer, uploadId, filePath} = data;
+        let blockSize = 512 * 1024;
+        return new Promise((resolve, reject)=> {
+          let blocks = _.chunk(buffer, blockSize);
+          async.reduce(blocks, {index: 0}, (memo, item, cb)=> {
+            let start = memo.index;
+            let end = Math.min(buffer.length, (start + blockSize));
+            let options = {
+              uploadId,
+              filePath,
+              buffer: new Buffer(item),
+              header: {NDPatition: urlencode(`bytes=${start}-${end}`)}
+            };
+            Promise.resolve(options)
+              .then(this.buildFormData.bind(this))
+              .then((data)=> {
+                let {uploadId} = data;
+                data.query = {uploadid: uploadId};
+                return data;
+              })
+              .then(super.upload.bind(this))
+              .then((data)=> {
+                if (data.code != 0) {
+                  cb(new Error(data.msg));
+                }
+                cb(null, {index: end, data});
+              })
+              .catch((err)=> {
+                cb(err);
+              });
+          }, (err, result)=> {
+            if (err) {
+              return reject(err);
+            }
+            return resolve(result.data);
+          });
+        });
       });
   }
 

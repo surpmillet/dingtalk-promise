@@ -102,45 +102,36 @@ class Base {
 
   assemble(data, errmsg = null) {
     if (!errmsg) {
-      return _(data).assign({errcode: 0}, {errmsg: 'ok'}).value();
+      return _.assignIn(data, {errcode: 0}, {errmsg: 'ok'});
     }
     else {
       return {errcode: -1, errmsg};
     }
   }
 
-  fromMedia(options) {
+  read(options) {
     let {filePath} = options;
     return new Promise((resolve, reject)=> {
-      fs.readFile(filePath, function (err, fileBuffer) {
+      fs.readFile(filePath, function (err, buffer) {
         if (err) {
           return reject(err);
         }
-        return resolve(_(options).assign({fileBuffer}).value());
+        return resolve(_.assignIn(options, {buffer}));
       });
     });
   }
 
   buildFormData(options) {
-    let {fileBuffer, filePath, postHeader = {}} = options;
-    var mime = {
-      '.jpg': 'image',
-      '.png': 'image',
-      '.amr': 'voice'
-    };
+    let {buffer, filePath, header = {}} = options;
     var boundary = Service.getNonceSecurityString();
     var contentType = `multipart/form-data; boundary=${boundary}`;
     var contentDisposition = `form-data;name=\"media\";filename=\"${path.basename(filePath)}\"`;
-    var header = `--${boundary}\r\nContent-Disposition:${contentDisposition}\r\nContent-Type:multipart/form-data;boundary=----${Service.getNonceSecurityString()}\r\n\r\n`;
-    var headerBuffer = new Buffer(header);
+    var contentHeader = `--${boundary}\r\nContent-Disposition:${contentDisposition}\r\nContent-Type:multipart/form-data;boundary=----${Service.getNonceSecurityString()}\r\n\r\n`;
+    var headerBuffer = new Buffer(contentHeader);
     var endBuffer = new Buffer(`\r\n--${boundary}--\r\n`);
-    var buffer = Buffer.concat([headerBuffer, fileBuffer, endBuffer]);
-    return _(options).assign({
-      type: _.has(mime, path.extname(filePath)) ? mime[path.extname(filePath)] : 'file',
-      media: header,
-      header: _(postHeader).assign({'Content-Type': contentType}).value(),
-      buffer
-    }).value();
+    buffer = Buffer.concat([headerBuffer, buffer, endBuffer]);
+    _.assignIn(header, {'Content-Type': contentType});
+    return _.assignIn(options, {buffer, header, contentHeader});
   }
 }
 
