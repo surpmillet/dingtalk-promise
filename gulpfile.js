@@ -3,8 +3,13 @@
  */
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
+var del = require('del');
 
-gulp.task('babel', function () {
+gulp.task('clean:babel', function (cb) {
+  return del(['lib/**.*'], cb);
+});
+
+gulp.task('babel', ['clean:babel'], function () {
   return gulp.src('src/**/*.js')
     .pipe(plugins.changed('lib'))
     .pipe(plugins.sourcemaps.init())
@@ -13,7 +18,11 @@ gulp.task('babel', function () {
     .pipe(gulp.dest('lib'))
 });
 
-gulp.task('buildTest', function () {
+gulp.task('clean:test', function (cb) {
+  return del(['test/test.js'], cb);
+});
+
+gulp.task('buildTest', ['clean:test'], function () {
   return gulp.src('test/src/**.js')
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.concat('test.js'))
