@@ -16,8 +16,8 @@ describe('空间接口', function () {
     var options = {
       agent_id: process.env.agentid,
       userid: process.env.userid,
-      media_id: process.env.mediaid,
-      file_name: '1.png'
+      media_id: process.env.fileid,
+      file_name: 'test.jpg'
     };
     return dt.createSpace().sendToChat(options)
       .then((data)=> {

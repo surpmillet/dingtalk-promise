@@ -9,10 +9,10 @@ describe('用户接口', function () {
   var userid;
   var name;
   before('获取部门ID', function () {
-    return dept.getList()
-      .then((data)=> {
-        return id = data.department[1].id;
-      });
+    // return dept.getList()
+    //   .then((data)=> {
+    //     return id = data.department[1].id;
+    //   });
   });
   it('获取部门成员列表', function () {
     return user.getSimpleList({department_id: id})
@@ -31,6 +31,13 @@ describe('用户接口', function () {
 
   it('获取成员详情', function () {
     return user.getDetail({userid: userlist[0].userid})
+      .then((data)=> {
+        return data.errcode.should.equal(0);
+      });
+  });
+
+  it.only('通过name获取成员详情', function () {
+    return user.getDetail({name: '米超'})
       .then((data)=> {
         return data.errcode.should.equal(0);
       });

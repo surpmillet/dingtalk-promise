@@ -1,7 +1,7 @@
 /**
  * Created by michao on 16/8/2.
  */
-describe.only('钉盘接口', function () {
+describe('钉盘接口', function () {
   var file = dt.createFile();
   var uploadid;
   var fileid;
@@ -14,7 +14,7 @@ describe.only('钉盘接口', function () {
       .then(file.getUploadId.bind(file))
       .then((data)=> {
         uploadid = data.uploadid;
-        console.log(uploadid);
+        console.log(`uploadid:${uploadid}`);
         data.code.should.equal('0');
       });
   });
@@ -25,6 +25,7 @@ describe.only('钉盘接口', function () {
     return file.upload(filepath)
       .then((data)=> {
         fileid = data.filepath;
+        console.log(`fileid:${fileid}`);
         data.code.should.equal('0');
       });
   });
