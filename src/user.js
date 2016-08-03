@@ -22,16 +22,6 @@ class User extends Base {
       .then(this.parse.bind(this));
   }
 
-  getHandler(id) {
-    return this.getSimpleList({department_id: id})
-      .then((data)=> {
-        return data.userlist.filter((user)=> {
-          return user.name == name;
-        })[0];
-      })
-      .then(this.getDetail({userid: data.userid}).bind(this))
-  }
-
   getDetail(query) {
     let {name, userid} = query;
     if (userid) {

@@ -13,13 +13,17 @@ describe('空间接口', function () {
   });
 
   it('发送文件到会话', function () {
-    var options = {
-      agent_id: process.env.agentid,
-      userid: process.env.userid,
-      media_id: process.env.fileid,
-      file_name: 'test.jpg'
-    };
-    return dt.createSpace().sendToChat(options)
+    var space = dt.createSpace();
+    return dt.createUser().getDetail({name: '倪昕超'})
+      .then((data)=> {
+        return {
+          agent_id: process.env.agentid,
+          media_id: process.env.fileid,
+          userid: data[0].userid,
+          file_name: 'test.jpg'
+        };
+      })
+      .then(space.sendToChat.bind(space))
       .then((data)=> {
         return data.errcode.should.equal(0);
       });
